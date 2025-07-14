@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ceylin'in Kütüphanesi - Modern & Zarif Okuma Deneyimi</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght%40400%3B500%3B600%3B700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* CSS Değişkenleri: Rafine Renk Paleti ve Detaylı Gölge Sistemi (Tema Desteği ile) */
@@ -1042,175 +1042,212 @@
 
 
         /* Responsive Tasarım */
-        @media (max-width: 992px) {
-            header {
-                padding: 15px 25px;
-            }
-            header .logo {
-                font-size: 1.7em;
-            }
-            nav ul {
-                gap: 20px;
-            }
-            h1 {
-                font-size: 3.5em;
-            }
-            h2 {
-                font-size: 2.5em;
-            }
-            main {
-                padding-top: 100px;
-            }
-            section {
-                padding: 40px;
-            }
-            .book-grid {
-                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-                gap: 25px;
-            }
-            .book-card img {
-                max-width: 160px;
-                height: 240px;
-            }
-            #kategoriler ul li {
-                padding: 10px 20px;
-                font-size: 0.95em;
-            }
-            .search-input {
-                width: 150px;
-            }
+        /* Genel ayarlar */
+        body {
+            font-size: 16px; /* Varsayılan font boyutu */
         }
 
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                align-items: center;
-                padding: 15px 20px 10px;
-            }
-            header .logo {
-                margin-bottom: 10px;
-                font-size: 1.5em;
-            }
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 15px;
-                margin-bottom: 15px; /* Alt kontrol gruplarından ayırmak için */
-            }
-            nav ul li a {
-                font-size: 0.9em;
-            }
-            .header-controls {
-                width: 100%;
-                justify-content: center;
-                gap: 15px;
-            }
-            .search-input {
-                width: 100%; /* Tam genişlikte */
-                max-width: 250px;
-            }
-            h1 {
-                font-size: 2.8em;
-                padding: 60px 0 30px;
-            }
-            h2 {
-                font-size: 2.2em;
-            }
-            h3 {
-                font-size: 1.6em;
-            }
-            main {
-                padding-top: 150px; /* Header yüksekliğine göre ayarla */
-            }
-            section {
-                padding: 30px;
-            }
-            .book-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .book-card {
-                padding: 20px;
-            }
-            .book-card img {
-                max-width: 140px;
-                height: 210px;
-            }
-            .quiz-option-button {
-                font-size: 1em;
-                padding: 12px 20px;
-            }
-            #quiz-container {
-                padding: 30px;
-            }
-            #quiz-container h2 {
-                font-size: 2em;
-            }
-            #quiz-container h3 {
-                font-size: 1.3em;
-            }
-            p {
-                font-size: 0.95em;
-            }
-            #kategoriler ul li {
-                padding: 8px 18px;
-                font-size: 0.9em;
-            }
-            #kategoriler ul li .icon {
-                font-size: 1em;
-            }
-            footer a {
-                margin: 0 8px;
-                font-size: 0.85em;
-            }
-            .stat-item {
-                min-width: 150px;
-            }
-            .stat-item .counter {
-                font-size: 2.5em;
-            }
+        /* Başlıklar için daha esnek font boyutları */
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem); /* Minimum 2.5rem, viewport genişliğinin %8'i, maksimum 4.5rem */
         }
 
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 2.2em;
-                padding: 40px 0 20px;
-            }
-            h2 {
-                font-size: 1.8em;
-            }
-            section {
-                padding: 25px;
-            }
-            #anasayfa {
-                padding: 40px 20px;
-            }
-            .book-card img {
-                max-width: 120px;
-                height: 180px;
-            }
-            .book-card h3 {
-                font-size: 1.4em;
-            }
-            #quiz-container {
-                padding: 20px 25px;
-            }
-            .quiz-option-button {
-                font-size: 0.9em;
-                padding: 10px 15px;
-            }
-            header .logo {
-                font-size: 1.3em;
-            }
-            main {
-                padding-top: 130px;
-            }
-            #kategoriler ul {
-                gap: 10px;
-            }
-            #kategoriler ul li {
-                padding: 6px 15px;
-            }
+        h2 {
+            font-size: clamp(1.8rem, 6vw, 2.8rem);
+        }
+
+        h3 {
+            font-size: clamp(1.4rem, 4.5vw, 1.8rem);
+        }
+
+        p {
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+        }
+
+        /* Quiz Bölümü */
+        #quiz-container h2 {
+            font-size: clamp(1.8rem, 6vw, 2.6em);
+        }
+
+        #quiz-container h3 {
+            font-size: clamp(1.2rem, 3.5vw, 1.4em);
+        }
+
+        .quiz-option-button {
+            font-size: clamp(0.9em, 2.5vw, 1.05em);
+            padding: clamp(10px, 3vw, 14px) clamp(20px, 5vw, 25px);
+        }
+
+        #quiz-feedback {
+            font-size: clamp(0.9em, 2.5vw, 1.1em);
+        }
+
+        /* Header */
+        header {
+            padding: 15px clamp(15px, 5vw, 40px); /* Yan boşluklar */
+            flex-wrap: wrap; /* Küçük ekranlarda alt alta gelme */
+            justify-content: center; /* Ortala */
+            gap: 15px; /* Elemanlar arası boşluk */
+        }
+        header .logo {
+            font-size: clamp(1.5em, 5vw, 1.9em);
+            margin-bottom: 0; /* Kaldırıldı */
+        }
+        nav ul {
+            gap: clamp(15px, 4vw, 30px);
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 0; /* Kaldırıldı */
+        }
+        nav ul li a {
+            font-size: clamp(0.9em, 2.5vw, 1em);
+        }
+        .header-controls {
+            width: auto;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .search-input {
+            width: clamp(150px, 40vw, 250px); /* Daha esnek genişlik */
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+        }
+
+        /* Ana İçerik ve Bölümler */
+        main {
+            padding: clamp(80px, 20vw, 120px) clamp(10px, 4vw, 20px) 60px; /* Üst boşluk ayarlandı */
+        }
+        section {
+            padding: clamp(25px, 8vw, 50px);
+            margin-bottom: clamp(25px, 6vw, 40px);
+        }
+
+        /* Hero Bölümü */
+        #anasayfa {
+            padding: clamp(50px, 15vw, 80px) clamp(20px, 5vw, 40px);
+        }
+        #anasayfa p.subtitle {
+            font-size: clamp(1rem, 3vw, 1.25rem);
+        }
+        .cta-button {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            padding: clamp(0.8rem, 2.5vw, 1rem) clamp(2rem, 6vw, 3rem);
+        }
+
+        /* Kitap Kartları */
+        .book-grid {
+            grid-template-columns: repeat(auto-fit, minmax(clamp(180px, 45vw, 260px), 1fr)); /* Daha küçük min genişlik */
+            gap: clamp(20px, 5vw, 35px);
+        }
+        .book-card {
+            padding: clamp(15px, 5vw, 25px);
+        }
+        .book-card img {
+            max-width: clamp(100px, 30vw, 180px);
+            height: clamp(150px, 45vw, 270px);
+            margin-bottom: clamp(10px, 4vw, 20px);
+        }
+        .book-card h3 {
+            font-size: clamp(1.2em, 4vw, 1.6em);
+        }
+        .book-card .author {
+            font-size: clamp(0.8em, 2.2vw, 0.95em);
+        }
+        .like-button {
+            font-size: clamp(1.2em, 3.5vw, 1.4em);
+            bottom: clamp(10px, 3vw, 15px);
+            right: clamp(10px, 3vw, 15px);
+        }
+        #no-results {
+            font-size: clamp(1.2em, 4vw, 1.5em);
+            padding: clamp(30px, 8vw, 50px);
+        }
+
+        /* Kategoriler */
+        #kategoriler ul {
+            gap: clamp(10px, 3vw, 20px);
+        }
+        #kategoriler ul li {
+            padding: clamp(8px, 2.5vw, 12px) clamp(15px, 4vw, 25px);
+            font-size: clamp(0.85em, 2.2vw, 0.95em);
+            gap: clamp(5px, 2vw, 8px);
+        }
+        #kategoriler ul li i {
+            font-size: clamp(0.9em, 2.5vw, 1.1em);
+        }
+
+        /* Hakkımızda */
+        .stat-item {
+            min-width: clamp(120px, 35vw, 180px);
+            padding: clamp(15px, 5vw, 20px);
+        }
+        .stat-item i {
+            font-size: clamp(2em, 6vw, 2.5em);
+            margin-bottom: clamp(10px, 3vw, 15px);
+        }
+        .stat-item .counter {
+            font-size: clamp(2.2em, 7vw, 3em);
+        }
+        .stat-item p {
+            font-size: clamp(0.9em, 2.5vw, 1.1em);
+        }
+
+        /* İletişim */
+        #iletisim .contact-links {
+            gap: clamp(15px, 4vw, 25px);
+        }
+        #iletisim .contact-links a {
+            font-size: clamp(0.9em, 2.5vw, 1.05em);
+            gap: clamp(5px, 2vw, 8px);
+        }
+        #iletisim .contact-links a i {
+            font-size: clamp(1.2em, 3.5vw, 1.4em);
+        }
+
+        /* Yorumlar */
+        .yorum-kutusu {
+            padding: clamp(15px, 5vw, 20px);
+            margin-bottom: clamp(15px, 4vw, 20px);
+        }
+        .yorum-yazar {
+            font-size: clamp(1em, 2.8vw, 1.1em);
+        }
+        .yorum-icerik {
+            font-size: clamp(0.9em, 2.5vw, 1em);
+        }
+        .yorum-tarih {
+            font-size: clamp(0.75em, 2vw, 0.85em);
+        }
+        #yorum-formu input,
+        #yorum-formu textarea {
+            padding: clamp(10px, 3vw, 12px);
+            margin-bottom: clamp(10px, 3vw, 15px);
+            font-size: clamp(0.9em, 2.5vw, 1em);
+        }
+        #yorum-formu button {
+            padding: clamp(10px, 3vw, 12px) clamp(20px, 5vw, 25px);
+            font-size: clamp(1em, 2.8vw, 1.1em);
+        }
+
+        /* Footer */
+        footer {
+            padding: clamp(25px, 8vw, 40px) clamp(15px, 5vw, 20px);
+            font-size: clamp(0.8em, 2.2vw, 0.9em);
+        }
+        footer .footer-links {
+            gap: clamp(8px, 2vw, 10px) clamp(15px, 4vw, 20px);
+        }
+        footer a {
+            font-size: clamp(0.85em, 2.2vw, 0.95em);
+        }
+
+        /* Scroll Top Button */
+        #scrollTopBtn {
+            width: clamp(40px, 10vw, 50px);
+            height: clamp(40px, 10vw, 50px);
+            font-size: clamp(1em, 3vw, 1.2rem);
+            bottom: clamp(20px, 5vw, 30px);
+            right: clamp(20px, 5vw, 30px);
         }
     </style>
 </head>
@@ -1224,7 +1261,7 @@
             <div id="quiz-options">
                 <button class="quiz-option-button" data-answer="Hatırlamak">Hatırlamak</button>
                 <button class="quiz-option-button" data-answer="Unutmak">Yanlış yazılmış doğrusu "FORGÖT"</button>
-                <button class="quiz-option-button" data-answer="Anlamak">Unutmak</button>
+                <button class="quiz-option-button" data-answer="Anlamak">Anlamak</button>
                 <button class="quiz-option-button" data-answer="Beklemek">Beklemek</button>
             </div>
             <div id="quiz-feedback"></div>
@@ -1316,7 +1353,7 @@
                 <li data-filter="teknoloji"><i class="fas fa-microchip"></i> Teknoloji</li>
                 <li data-filter="roman"><i class="fas fa-book-open"></i> Roman</li>
                 <li data-filter="aşk"><i class="fas fa-heart"></i> Aşk</li>
-                <li data-filter="bilim-kurg"><i class="fas fa-rocket"></i> Bilim Kurgu</li>
+                <li data-filter="bilim-kurgu"><i class="fas fa-rocket"></i> Bilim Kurgu</li>
                 <li data-filter="kişisel-gelişim"><i class="fas fa-chart-line"></i> Kişisel Gelişim</li>
                 <li data-filter="tarih"><i class="fas fa-scroll"></i> Tarih</li>
             </ul>
@@ -1366,13 +1403,13 @@
             <h2>Bize Ulaşın: Fikirleriniz Bizim İçin Değerli</h2>
             <p>Kitaplar hakkında sohbet etmek, yeni eser önerilerinde bulunmak veya herhangi bir konuda destek almak isterseniz, ekibimiz size yardımcı olmaktan mutluluk duyar. Görüşleriniz ve önerileriniz, Ceylin'in Kütüphanesi'ni sürekli geliştirmemiz için bize ışık tutuyor. Her geri bildiriminizle daha iyiye ulaşıyoruz.</p>
             <div class="contact-links">
-                <a href="mailto:info@ceylininkutuphanesi.com">
+                <a href="">
                     <i class="fas fa-envelope"></i>
                 </a>
-                <a href="tel:">
+                <a href="">
                     <i class="fas fa-phone-alt"></i>
                 </a>
-                <a href="#" onclick="alert('Adresimiz: İzmir'); return false;">
+                <a href="#" onclick="alert('Adresimiz: İzmir,Türkiye'); return false;">
                     <i class="fas fa-map-marker-alt"></i> Adresimizi Gör
                 </a>
             </div>
@@ -1634,9 +1671,9 @@
 
             // Başlangıç Yorumları
             const yorumlar = [
-                { yazar: "Ali Şenol", icerik: "Güzel şık bir web sitesi kitaplar eklenince hep burayı kullanacağım.", tarih: "10 Temmuz 2025" },
-                { yazar: "Ayşe Yılmaz", icerik: "Kitapları beğenme özelliği çok hoş olmuş ama tek sıkıntı gaha kitaplar yok😢😢😢😢.", tarih: "10 Temmuz 2025" },
-                { yazar: "Mehmet Can", icerik: "Tebrik ederim başarılı bir e-kitp sitesi inşallah uygulama olarakta yapılır.", tarih: "12 Temmuz 2025" }
+                { yazar: "Ali Veli", icerik: "Kitapları beğenme özelliği çok hoş olmuş ama tek sıkıntı gaha kitaplar yok😢😢😢😢. Tasarımı da çok modern ve kullanışlı.", tarih: "10 Temmuz 2025" },
+                { yazar: "Ayşe Yılmaz", icerik: "Güzel şık bir web sitesi kitaplar eklenince hep burayı kullanacağım. Sürekli güncellenen bir kütüphane, tebrikler.", tarih: "10 Temmuz 2025" },
+                { yazar: "Mehmet Can", icerik: "Tebrik ederim başarılı bir e-kitp sitesi inşallah uygulama olarakta yapılır.", tarih: "13 Temmuz 2025" }
             ];
 
             function yorumEkle(yazar, icerik, tarih) {
