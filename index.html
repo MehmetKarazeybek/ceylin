@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ceylin'in Kütüphanesi - Modern & Zarif Okuma Deneyimi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Değişkenleri: Rafine Renk Paleti ve Detaylı Gölge Sistemi (Tema Desteği ile) */
+        :root {
+            --primary-color: #6A5ACD; /* Açık Mor - Ana vurgu, sakin ve asil */
+            --secondary-color: #9370DB; /* Orta Mor - İkincil vurgu, derinlik */
+            --accent-color: #FF6347; /* Domates Kırmızısı - Dikkat çekici detaylar, enerji */
+            --text-dark: #2F4F4F; /* Koyu Deniz Yeşili - Okunabilirlik, sakin */
+            --text-medium: #698B8B; /* Orta Deniz Yeşili - Yardımcı metinler */
+            --text-light: #B0C4DE; /* Açık Gri Mavi - Pasif öğeler */
+            --background-light: #F0F8FF; /* Alice Mavisi - Genel arka plan, ferah */
+            --background-card: #FFFFFF; /* Beyaz - Kartlar ve bölümler, temiz */
+            --border-light: #D3D3D3; /* Açık Gri - İnce kenarlıklar, zarif ayrım */
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --shadow-color-rgb: 0, 0, 0; /* Gölge rengi için RGB */
+
+            --shadow-xs: rgba(var(--shadow-color-rgb), 0.04) 0px 1px 2px;
+            --shadow-sm: rgba(var(--shadow-color-rgb), 0.08) 0px 3px 6px;
+            --shadow-md: rgba(var(--shadow-color-rgb), 0.12) 0px 8px 24px;
+            --shadow-lg: rgba(var(--shadow-color-rgb), 0.18) 0px 12px 40px;
+
+            --transition-speed: 0.35s;
+            --border-radius-soft: 12px;
+            --border-radius-round: 25px;
+        }
+
+        /* Dark Theme Modu */
+        body.dark-theme {
+            --primary-color: #8A79F7; /* Açık Mor */
+            --secondary-color: #6C5CE7; /* Koyu Mor */
+            --accent-color: #FF8C82; /* Kırmızımsı Turuncu */
+            --text-dark: #EAEAEA; /* Açık Gri */
+            --text-medium: #B0C4DE; /* Orta Gri Mavi */
+            --text-light: #40405F; /* Koyu Gri Mavi */
+            --background-light: #1A1A2E; /* Koyu Lacivert */
+            --background-card: #24243E; /* Orta Lacivert */
+            --border-light: #40405F; /* Koyu Gri Mavi */
+            --header-bg: rgba(26, 26, 46, 0.9);
+            --shadow-color-rgb: 0, 0, 0; /* Gölge rengi için siyah */
+        }
+
+        /* Temel Ayarlar */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif; /* Ana metin fontu */
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease-in-out;
+        }
+
+        a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Animasyon Sınıfları */
+        .anim-hidden {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .anim-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Giriş Ekranı (Preloader & Quiz) */
+        #entry-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            transform: scale(1);
+        }
+
+        #entry-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: scale(1.02);
+        }
+
+        #quiz-container {
+            background-color: var(--background-card);
+            padding: 45px 55px;
+            border-radius: var(--border-radius-soft);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            transform: translateY(20px) scale(0.98);
+            opacity: 0;
+            animation: fadeInScaleUp 0.7s ease-out forwards 0.5s;
+            border: 1px solid var(--border-light);
+            transition: background-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease, border-color var(--transition-speed) ease;
+        }
+
+        @keyframes fadeInScaleUp {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        #quiz-container h2 {
+            font-family: 'Playfair Display', serif; /* Başlık fontu */
+            font-size: 2.6em;
+            margin-bottom: 18px;
+            color: var(--primary-color);
+            text-shadow: var(--shadow-xs);
+            transition: color var(--transition-speed) ease;
+        }
+
+        #quiz-container h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.4em;
+            margin-bottom: 30px;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color var(--transition-speed) ease;
+        }
+
+        #quiz-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 25px;
+        }
+
+        .quiz-option-button {
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            padding: 14px 25px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius-round);
+            font-size: 1.05em;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .quiz-option-button::before { /* Parıltılı hover efekti */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.4s ease;
+            z-index: 0;
+        }
+
+        .quiz-option-button:hover::before {
+            left: 100%;
+        }
+
+        .quiz-option-button:hover {
+            background-color: var(--secondary-color);
+            color: #fff;
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: var(--shadow-md);
+            border-color: var(--secondary-color);
+        }
+
+        .quiz-option-button.correct {
+            background-color: #28a745;
+            color: #fff;
+            border-color: #28a745;
+            animation: pulseCorrect 0.7s infinite alternate;
+        }
+
+        @keyframes pulseCorrect {
+            from { transform: scale(1); box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            to { transform: scale(1.02); box-shadow: 0 0 10px 5px rgba(40, 167, 69, 0.9); }
+        }
+
+        .quiz-option-button.wrong {
+            background-color: #dc3545;
+            color: #fff;
+            border-color: #dc3545;
+            animation: shake 0.3s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        #quiz-feedback {
+            margin-top: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            min-height: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        #quiz-feedback.visible {
+            opacity: 1;
+        }
+
+        /* Tipografi ve Genel Başlıklar */
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif; /* Başlık fontu */
+            color: var(--text-dark);
+            line-height: 1.2;
+            margin-bottom: 25px;
+            transition: color var(--transition-speed) ease;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 4.2em;
+            color: var(--primary-color);
+            letter-spacing: -1px;
+            text-shadow: var(--shadow-sm);
+            padding: 80px 0 40px;
+            animation: textSlideIn 1.2s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes textSlideIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 2.8em;
+            text-align: center;
+            margin-top: 60px;
+            margin-bottom: 35px;
+            position: relative;
+            color: var(--primary-color);
+            padding-bottom: 15px;
+            text-shadow: var(--shadow-xs);
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 90px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            margin: 15px auto 0;
+            border-radius: 2px;
+            animation: lineDraw 1s ease-out forwards;
+            opacity: 0;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes lineDraw {
+            from { width: 0; opacity: 0; }
+            to { width: 90px; opacity: 1; }
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-family: 'Inter', sans-serif;
+            font-size: 1em;
+            color: var(--text-medium);
+            margin-bottom: 20px;
+            text-align: justify;
+            transition: color var(--transition-speed) ease;
+        }
+
+        strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Header (Sabit Navigasyon) - Geliştirilmiş Tasarım */
+        header {
+            background-color: var(--header-bg); /* Hafif şeffaf */
+            backdrop-filter: blur(12px); /* Yeni: Blur efekti */
+            -webkit-backdrop-filter: blur(12px); /* Safari desteği */
+            padding: 15px 40px;
+            box-shadow: 0 4px 20px rgba(var(--shadow-color-rgb), 0.1); /* Gölge rengi değişkeni ile */
+            position: sticky; /* Fixed yerine sticky */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.4s ease, background-color 0.4s ease, box-shadow 0.4s ease;
+            transform: translateY(0);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        header.hidden {
+            transform: translateY(-110%); /* Biraz daha aşağı gizle */
+        }
+
+        header .logo {
+            font-family: 'Playfair Display', serif; /* Başlık fontu */
+            font-size: 1.9em;
+            font-weight: 700;
+            color: var(--primary-color);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease, color var(--transition-speed) ease;
+        }
+
+        header .logo:hover {
+            transform: scale(1.02);
+        }
+
+        header .logo i {
+            margin-right: 10px;
+            color: var(--accent-color);
+            font-size: 1.1em;
+            animation: floatAndRotate 4s infinite ease-in-out alternate;
+            transition: color var(--transition-speed) ease;
+        }
+
+        @keyframes floatAndRotate {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+
+        nav ul li a {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1em;
+            color: var(--text-dark);
+            position: relative;
+            padding: 8px 0;
+            transition: all 0.3s ease, color var(--transition-speed) ease;
+            display: inline-block;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        /* Header Kontrolleri (Arama ve Tema) */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 200px;
+            padding: 0.6rem 0.5rem;
+            border: none;
+            border-bottom: 2px solid var(--primary-color);
+            background-color: transparent;
+            color: var(--text-dark);
+            font-size: 1rem;
+            transition: all 0.4s ease;
+            outline: none;
+        }
+        .search-input::placeholder {
+            color: var(--text-medium);
+            opacity: 0.7;
+        }
+        .search-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 1px 0 var(--accent-color);
+        }
+
+        /* Tema Geçiş Butonu */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .theme-switch {
+            display: inline-block;
+            height: 24px;
+            position: relative;
+            width: 48px;
+        }
+
+        .theme-switch input {
+            display: none;
+        }
+
+        .slider {
+            background-color: var(--text-light); /* Açık modda gri, koyu modda koyu */
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+        }
+
+        .slider:before {
+            background-color: var(--background-card); /* Anahtarı rengi */
+            bottom: 2px;
+            content: "";
+            height: 20px;
+            left: 2px;
+            position: absolute;
+            transition: .4s;
+            width: 20px;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+
+        /* Ana İçerik Alanı */
+        main {
+            max-width: 1100px; /* Biraz daha dar içerik alanı */
+            margin: 0 auto;
+            padding: 120px 20px 60px; /* Header'dan sonra boşluk */
+            opacity: 0; /* JS ile görünür yapılacak */
+            visibility: hidden; /* JS ile görünür yapılacak */
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+        }
+        main.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        section {
+            background-color: var(--background-card);
+            padding: 50px;
+            margin-bottom: 40px;
+            border-radius: var(--border-radius-soft);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            transition: background-color 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            /* anim-hidden sınıfı JS tarafından eklenecek/çıkarılacak */
+        }
+
+        /* Hero Bölümü (Anasayfa) */
+        #anasayfa {
+            text-align: center;
+            background: linear-gradient(135deg, var(--background-light) 0%, var(--secondary-color) 100%);
+            padding: 80px 40px;
+            margin-bottom: 50px;
+            border-radius: var(--border-radius-soft);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            border: none;
+        }
+
+        #anasayfa h1 {
+            font-size: 4.5rem; /* Biraz daha büyük */
+            color: var(--primary-color);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            padding: 0; /* Genel h1 padding'ini ezecek */
+        }
+        #anasayfa p.subtitle {
+            font-size: 1.25rem; /* Büyük alt başlık */
+            max-width: 700px;
+            margin: 20px auto 40px;
+            color: var(--text-medium);
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 8px 25px rgba(var(--shadow-color-rgb), 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+        }
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(var(--shadow-color-rgb), 0.3);
+        }
+
+        /* Kitap Kartları */
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 35px;
+            margin-top: 40px;
+            position: relative;
+        }
+
+        .book-card {
+            background-color: var(--background-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius-soft);
+            padding: 25px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease; /* Daha hızlı geçiş */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            z-index: 1;
+            transform-style: preserve-3d; /* 3D efekt için */
+        }
+
+        /* 3D Kart İçeriği */
+        .book-card-content {
+            transform: translateZ(20px); /* İçeriği hafifçe öne çıkar */
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+
+        .book-card::before { /* Hafif renkli overlay (gizli) */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(var(--shadow-color-rgb), 0.05) 0%, rgba(255,255,255,0) 100%);
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .book-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Beğenme butonunun tıklanması durumunda turuncu olmaması için eklenen kural */
+        .book-card.clicked {
+            border-color: var(--primary-color); /* Tıklanınca ana renk */
+            box-shadow: 0 0 15px rgba(var(--primary-color), 0.4);
+        }
+
+        .book-card img {
+            width: 100%;
+            max-width: 180px;
+            height: 270px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .book-card img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 25px rgba(var(--primary-color), 0.3);
+        }
+
+        .book-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            z-index: 1;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .book-card .author {
+            font-style: italic;
+            color: var(--text-medium);
+            margin-bottom: 10px;
+            font-size: 0.95em;
+            z-index: 1;
+            transition: color var(--transition-speed) ease;
+        }
+
+        /* Beğen Butonu */
+        .like-button {
+            background: none;
+            border: none;
+            color: var(--text-light); /* Varsayılan gri */
+            font-size: 1.4em;
+            cursor: pointer;
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            z-index: 2;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+        .like-button:hover {
+            transform: scale(1.1);
+        }
+        .like-button.liked {
+            color: var(--accent-color); /* Beğenildiğinde kırmızı */
+        }
+        .like-button.liked:hover {
+            color: var(--accent-color); /* Hover'da da aynı renk kalır */
+        }
+
+        /* Arama sonuç bulunamadı mesajı */
+        #no-results {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 500;
+            color: var(--accent-color);
+            padding: 50px;
+            display: none; /* JS ile gösterilecek */
+            width: 100%;
+        }
+
+
+        /* Kategori Listesi - Geliştirilmiş Tasarım */
+        #kategoriler ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        #kategoriler ul li {
+            background-color: transparent; /* Varsayılan olarak şeffaf */
+            border: 1px solid var(--border-light);
+            color: var(--text-dark);
+            border-radius: 30px; /* Daha yuvarlak */
+            padding: 12px 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            user-select: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #kategoriler ul li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--secondary-color), transparent);
+            transition: left 0.4s ease;
+            z-index: 0;
+            opacity: 0.8;
+        }
+
+        #kategoriler ul li:hover::before {
+            left: 0;
+        }
+
+        #kategoriler ul li:hover {
+            background-color: var(--secondary-color); /* Fallback */
+            color: white;
+            border-color: var(--secondary-color);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        #kategoriler ul li.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px); /* Aktif olan da hafif kalkık durabilir */
+        }
+        #kategoriler ul li.active::before {
+             left: 0; /* Aktifken de efekti göster */
+             background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+        }
+
+
+        #kategoriler ul li i { /* İkonlar için */
+            transition: color 0.3s ease;
+            font-size: 1.1em;
+            position: relative;
+            z-index: 1;
+        }
+
+        #kategoriler ul li:hover i, #kategoriler ul li.active i {
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Hakkımızda - Animasyonlu Sayaçlar */
+        #hakkimizda .stats-container {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-top: 50px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-item {
+            padding: 20px;
+            flex: 1;
+            min-width: 180px;
+            max-width: 250px;
+            background-color: var(--background-light);
+            border-radius: var(--border-radius-soft);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            transition: background-color 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .stat-item.anim-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        .stat-item i {
+            font-size: 2.5em;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .stat-item .counter {
+            font-family: 'Playfair Display', serif;
+            font-size: 3em;
+            font-weight: 700;
+            color: var(--primary-color);
+            transition: color var(--transition-speed) ease;
+        }
+
+        .stat-item p {
+            font-size: 1.1em;
+            color: var(--text-dark);
+            opacity: 0.8;
+            margin-top: 5px;
+            margin-bottom: 0; /* İstatistik altındaki p etiketinin kendi margin'i olmasın */
+            transition: color var(--transition-speed) ease;
+        }
+
+
+        /* İletişim */
+        #iletisim p {
+            max-width: 800px;
+            margin: 20px auto;
+            text-align: center;
+            font-size: 1em;
+            color: var(--text-medium);
+        }
+
+        /* İletişim Bağlantıları */
+        #iletisim .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        #iletisim .contact-links a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.05em;
+            font-weight: 500;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+        #iletisim .contact-links a:hover {
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        #iletisim .contact-links a i {
+            font-size: 1.4em;
+            color: var(--secondary-color);
+            transition: color 0.3s ease;
+        }
+        #iletisim .contact-links a:hover i {
+            color: var(--primary-color);
+        }
+
+        /* Yorumlar Bölümü */
+        #yorumlar {
+            background-color: var(--background-card);
+            padding: 50px;
+            margin-bottom: 40px;
+            border-radius: var(--border-radius-soft);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+        }
+
+        .yorum-kutusu {
+            background-color: var(--background-light);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius-soft);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-xs);
+            transition: all var(--transition-speed) ease;
+        }
+        .yorum-kutusu:hover {
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+        }
+        .yorum-yazar {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+        .yorum-icerik {
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        .yorum-tarih {
+            font-size: 0.85em;
+            color: var(--text-medium);
+            text-align: right;
+        }
+
+        /* Yorum Formu */
+        #yorum-formu {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-light);
+        }
+        #yorum-formu label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        #yorum-formu input[type="text"],
+        #yorum-formu textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1em;
+            color: var(--text-dark);
+            background-color: var(--background-light);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        #yorum-formu input[type="text"]:focus,
+        #yorum-formu textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(var(--primary-color), 0.2);
+        }
+        #yorum-formu textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        #yorum-formu button {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(var(--shadow-color-rgb), 0.2);
+        }
+        #yorum-formu button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(var(--shadow-color-rgb), 0.3);
+        }
+
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: var(--background-card);
+            color: var(--text-medium);
+            font-size: 0.9em;
+            border-top: 1px solid var(--border-light);
+            box-shadow: var(--shadow-xs);
+            margin-top: 50px;
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+        }
+
+        footer p {
+            margin-bottom: 10px;
+            color: var(--text-medium); /* Override default p color */
+            text-align: center; /* Override default p align */
+        }
+
+        footer .footer-links {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+        }
+
+        footer a {
+            color: var(--text-medium);
+            font-weight: 400;
+            font-size: 0.95em;
+            position: relative;
+        }
+
+        footer a::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -3px;
+            width: 0;
+            height: 1px;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+        footer a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        footer a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Yukarı Çık Butonu */
+        #scrollTopBtn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(var(--shadow-color-rgb), 0.3);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            z-index: 900;
+        }
+        #scrollTopBtn.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+
+        /* Responsive Tasarım */
+        @media (max-width: 992px) {
+            header {
+                padding: 15px 25px;
+            }
+            header .logo {
+                font-size: 1.7em;
+            }
+            nav ul {
+                gap: 20px;
+            }
+            h1 {
+                font-size: 3.5em;
+            }
+            h2 {
+                font-size: 2.5em;
+            }
+            main {
+                padding-top: 100px;
+            }
+            section {
+                padding: 40px;
+            }
+            .book-grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 25px;
+            }
+            .book-card img {
+                max-width: 160px;
+                height: 240px;
+            }
+            #kategoriler ul li {
+                padding: 10px 20px;
+                font-size: 0.95em;
+            }
+            .search-input {
+                width: 150px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: center;
+                padding: 15px 20px 10px;
+            }
+            header .logo {
+                margin-bottom: 10px;
+                font-size: 1.5em;
+            }
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+                margin-bottom: 15px; /* Alt kontrol gruplarından ayırmak için */
+            }
+            nav ul li a {
+                font-size: 0.9em;
+            }
+            .header-controls {
+                width: 100%;
+                justify-content: center;
+                gap: 15px;
+            }
+            .search-input {
+                width: 100%; /* Tam genişlikte */
+                max-width: 250px;
+            }
+            h1 {
+                font-size: 2.8em;
+                padding: 60px 0 30px;
+            }
+            h2 {
+                font-size: 2.2em;
+            }
+            h3 {
+                font-size: 1.6em;
+            }
+            main {
+                padding-top: 150px; /* Header yüksekliğine göre ayarla */
+            }
+            section {
+                padding: 30px;
+            }
+            .book-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .book-card {
+                padding: 20px;
+            }
+            .book-card img {
+                max-width: 140px;
+                height: 210px;
+            }
+            .quiz-option-button {
+                font-size: 1em;
+                padding: 12px 20px;
+            }
+            #quiz-container {
+                padding: 30px;
+            }
+            #quiz-container h2 {
+                font-size: 2em;
+            }
+            #quiz-container h3 {
+                font-size: 1.3em;
+            }
+            p {
+                font-size: 0.95em;
+            }
+            #kategoriler ul li {
+                padding: 8px 18px;
+                font-size: 0.9em;
+            }
+            #kategoriler ul li .icon {
+                font-size: 1em;
+            }
+            footer a {
+                margin: 0 8px;
+                font-size: 0.85em;
+            }
+            .stat-item {
+                min-width: 150px;
+            }
+            .stat-item .counter {
+                font-size: 2.5em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2.2em;
+                padding: 40px 0 20px;
+            }
+            h2 {
+                font-size: 1.8em;
+            }
+            section {
+                padding: 25px;
+            }
+            #anasayfa {
+                padding: 40px 20px;
+            }
+            .book-card img {
+                max-width: 120px;
+                height: 180px;
+            }
+            .book-card h3 {
+                font-size: 1.4em;
+            }
+            #quiz-container {
+                padding: 20px 25px;
+            }
+            .quiz-option-button {
+                font-size: 0.9em;
+                padding: 10px 15px;
+            }
+            header .logo {
+                font-size: 1.3em;
+            }
+            main {
+                padding-top: 130px;
+            }
+            #kategoriler ul {
+                gap: 10px;
+            }
+            #kategoriler ul li {
+                padding: 6px 15px;
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+
+    <div id="entry-screen">
+        <div id="quiz-container">
+            <h2>Ceylin'in Kütüphanesi'ne Hoş Geldiniz!</h2>
+            <p>Küçük bir soru ile bilginizi test edelim:</p>
+            <h3>"Forget" kelimesinin Türkçe karşılığı nedir?</h3>
+            <div id="quiz-options">
+                <button class="quiz-option-button" data-answer="Hatırlamak">Hatırlamak</button>
+                <button class="quiz-option-button" data-answer="Unutmak">Yanlış yazılmış doğrusu "FORGÖT"</button>
+                <button class="quiz-option-button" data-answer="Anlamak">Unutmak</button>
+                <button class="quiz-option-button" data-answer="Beklemek">Beklemek</button>
+            </div>
+            <div id="quiz-feedback"></div>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-book-reader"></i> Ceylin'in Kütüphanesi
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#anasayfa">Anasayfa</a></li>
+                <li><a href="#populer-kitaplar">Kitaplar</a></li>
+                <li><a href="#kategoriler">Kategoriler</a></li>
+                <li><a href="#hakkimizda">Hakkımızda</a></li>
+                <li><a href="#yorumlar">Yorumlar</a></li>
+                <li><a href="#iletisim">İletişim</a></li>
+            </ul>
+        </nav>
+        <div class="header-controls">
+            <div class="search-container">
+                <input type="search" id="searchInput" class="search-input" placeholder="Anlık arama yapın...">
+            </div>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="theme-checkbox">
+                    <input type="checkbox" id="theme-checkbox" />
+                    <div class="slider round"></div>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="anasayfa" class="anim-hidden">
+            <h1>Kelimelerin Büyüsünü Keşfedin</h1>
+            <p class="subtitle"><strong>Ceylin'in Kütüphanesi</strong>, size ilham verecek, düşündürecek ve ruhunuzu besleyecek binlerce hikayeyle dolu dijital bir cennettir. Burada her sayfasında yeni bir dünyanın kapılarını aralayacağınız, özenle seçilmiş geniş bir e-kitap koleksiyonunu keşfedebilirsiniz. Okuma serüveninize yepyeni bir boyut katın!</p>
+            <a href="#populer-kitaplar" class="cta-button">Koleksiyonu Keşfet</a>
+        </section>
+
+        <section id="populer-kitaplar" class="anim-hidden">
+            <h2>Popüler Kitaplar: Okuyucuların Favorileri</h2>
+            <div class="book-grid">
+                <div class="book-card anim-hidden" data-category="tasarım" data-title="Minimalist Tasarım Rehberi" data-author="Aylin Demir">
+                    <div class="book-card-content">
+                        <img src="https://image.pollinations.ai/prompt/minimalist%20interior%20design%20book%20cover%20modern%20clean%20aesthetic%20%22Minimalist%20Tasar%C4%B1m%20Rehberi%22" alt="Minimalist Tasarım Rehberi Kapağı">
+                        <h3>Minimalist Tasarım Rehberi</h3>
+                        <p class="author">Yazar: Aylin Demir</p>
+                        <button class="like-button"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+
+                <div class="book-card anim-hidden" data-category="sanat" data-title="Renklerin ve Işığın Dansı" data-author="Can Erdem">
+                    <div class="book-card-content">
+                        <img src="https://image.pollinations.ai/prompt/abstract%20color%20light%20blend%20interior%20design%20book%20cover%20vibrant%20sophisticated%20%22Renklerin%20ve%20I%C5%9F%C4%B1%C4%9F%C4%B1n%20Dans%C4%B1%22" alt="Renklerin ve Işığın Dansı Kapağı">
+                        <h3>Renklerin ve Işığın Dansı</h3>
+                        <p class="author">Yazar: Can Erdem</p>
+                        <button class="like-button"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+
+                <div class="book-card anim-hidden" data-category="teknoloji" data-title="Mekanlarda Akustik Çözümler" data-author="Deniz Aslan">
+                    <div class="book-card-content">
+                        <img src="https://image.pollinations.ai/prompt/acoustic%20panels%20sound%20waves%20interior%20design%20book%20cover%20professional%20technical%20%22Mekanlarda%20Akustik%20%C3%87%C3%B6z%C3%BCmler%22" alt="Mekanlarda Akustik Çözümler Kapağı">
+                        <h3>Mekanlarda Akustik Çözümler</h3>
+                        <p class="author">Yazar: Deniz Aslan</p>
+                        <button class="like-button"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+
+                <div class="book-card anim-hidden" data-category="tasarım" data-title="Sürdürülebilir ve Biyofilik Tasarım" data-author="Ece Kara">
+                    <div class="book-card-content">
+                        <img src="https://image.pollinations.ai/prompt/sustainable%20biophilic%20design%20interior%20book%20cover%20nature%20elements%20eco-friendly%20%22S%C3%BCrd%C3%BCr%C3%BClebilir%20ve%20Biyofilik%20Tasar%C4%B1m%22" alt="Sürdürülebilir ve Biyofilik Tasarım Kapağı">
+                        <h3>Sürdürülebilir ve Biyofilik Tasarım</h3>
+                        <p class="author">Yazar: Ece Kara</p>
+                        <button class="like-button"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div id="no-results">Aradığınız kriterlere uygun kitap bulunamadı.</div>
+        </section>
+
+        <section id="kategoriler" class="anim-hidden">
+            <h2>Keşfedilecek Kategoriler: Okuma Zevkinize Göre</h2>
+            <ul>
+                <li class="active" data-filter="all"><i class="fas fa-th-large"></i> Tümü</li>
+                <li data-filter="tasarım"><i class="fas fa-drafting-compass"></i> Tasarım</li>
+                <li data-filter="sanat"><i class="fas fa-palette"></i> Sanat</li>
+                <li data-filter="teknoloji"><i class="fas fa-microchip"></i> Teknoloji</li>
+                <li data-filter="roman"><i class="fas fa-book-open"></i> Roman</li>
+                <li data-filter="aşk"><i class="fas fa-heart"></i> Aşk</li>
+                <li data-filter="bilim-kurg"><i class="fas fa-rocket"></i> Bilim Kurgu</li>
+                <li data-filter="kişisel-gelişim"><i class="fas fa-chart-line"></i> Kişisel Gelişim</li>
+                <li data-filter="tarih"><i class="fas fa-scroll"></i> Tarih</li>
+            </ul>
+        </section>
+
+        <section id="hakkimizda" class="anim-hidden">
+            <h2>Ceylin'in Kütüphanesi: Biz Kimiz?</h2>
+            <p style="text-align:center; max-width: 800px; margin: 0 auto 30px;"><strong>Ceylin'in Kütüphanesi</strong> olarak, okuma tutkusunu dijital dünyanın en zarif ve erişilebilir köşesine taşıyan bir platform sunmaktan onur duyuyoruz. Misyonumuz, her yaştan okuyucuya zengin ve kaliteli bir e-kitap seçeneği sunarken, onlara ilham veren, sakin ve estetik bir okuma ortamı sağlamaktır. Kitapların gücüne, bilginin yayılmasına ve hikayelerin birleştirici ruhuna yürekten inanıyoruz.</p>
+            <div class="stats-container">
+                <div class="stat-item anim-hidden">
+                    <i class="fas fa-book"></i>
+                    <div class="counter" data-target="1250">0</div>
+                    <p>Toplam Kitap</p>
+                </div>
+                <div class="stat-item anim-hidden">
+                    <i class="fas fa-users"></i>
+                    <div class="counter" data-target="8400">0</div>
+                    <p>Mutlu Okur</p>
+                </div>
+                <div class="stat-item anim-hidden">
+                    <i class="fas fa-feather-alt"></i>
+                    <div class="counter" data-target="320">0</div>
+                    <p>Toplam Yazar</p>
+                </div>
+            </div>
+            <p style="margin-top: 30px; text-align:center; max-width: 800px; margin-left: auto; margin-right: auto;">Amacımız, her okuyucunun aradığını kolayca bulabildiği, yeni yazarlarla tanıştığı ve okuma serüvenini zenginleştirdiği bir topluluk oluşturmaktır. Bu dijital kitap cennetinin bir parçası olun ve okuma deneyiminizi Ceylin'in Kütüphanesi ile bir üst seviyeye taşıyın. Keyifli ve aydınlatıcı okumalar dileriz!</p>
+        </section>
+
+        <section id="yorumlar" class="anim-hidden">
+            <h2>Okuyucularımızdan Yorumlar</h2>
+            <div id="yorum-listesi">
+                </div>
+
+            <div id="yorum-formu">
+                <h3>Yorum Bırakın</h3>
+                <label for="yorumcu-ad">Adınız:</label>
+                <input type="text" id="yorumcu-ad" placeholder="Adınızı girin..." required>
+
+                <label for="yorum-metni">Yorumunuz:</label>
+                <textarea id="yorum-metni" placeholder="Yorumunuzu buraya yazın..." required></textarea>
+
+                <button id="yorum-gonder-btn">Yorumu Gönder</button>
+            </div>
+        </section>
+
+        <section id="iletisim" class="anim-hidden">
+            <h2>Bize Ulaşın: Fikirleriniz Bizim İçin Değerli</h2>
+            <p>Kitaplar hakkında sohbet etmek, yeni eser önerilerinde bulunmak veya herhangi bir konuda destek almak isterseniz, ekibimiz size yardımcı olmaktan mutluluk duyar. Görüşleriniz ve önerileriniz, Ceylin'in Kütüphanesi'ni sürekli geliştirmemiz için bize ışık tutuyor. Her geri bildiriminizle daha iyiye ulaşıyoruz.</p>
+            <div class="contact-links">
+                <a href="mailto:info@ceylininkutuphanesi.com">
+                    <i class="fas fa-envelope"></i>
+                </a>
+                <a href="tel:">
+                    <i class="fas fa-phone-alt"></i>
+                </a>
+                <a href="#" onclick="alert('Adresimiz: İzmir'); return false;">
+                    <i class="fas fa-map-marker-alt"></i> Adresimizi Gör
+                </a>
+            </div>
+            <p style="margin-top: 30px; text-align: center;">Bizi sosyal medyada takip edin ve en yeni kitap duyurularımızdan, özel etkinliklerimizden ve edebiyat dünyasındaki gelişmelerden haberdar olun! Kitaplarla kalın, ilhamla kalın.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Ceylin'in Kütüphanesi. Tüm Hakları Saklıdır.</p>
+        <div class="footer-links">
+            <a href="#">Gizlilik Politikası</a>
+            <a href="#">Kullanım Koşulları</a>
+            <a href="#">Sıkça Sorulan Sorular</a>
+            <a href="#">Kariyer</a>
+        </div>
+    </footer>
+
+    <button id="scrollTopBtn" title="Yukarı çık"><i class="fas fa-arrow-up"></i></button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const quizOptions = document.querySelectorAll('.quiz-option-button');
+            const quizFeedback = document.getElementById('quiz-feedback');
+            const entryScreen = document.getElementById('entry-screen');
+            const mainContent = document.querySelector('main');
+            const header = document.querySelector('header');
+            const correctAnswer = "Unutmak";
+
+            // Quiz Mantığı
+            quizOptions.forEach(button => {
+                button.addEventListener('click', function() {
+                    const selectedAnswer = this.dataset.answer;
+
+                    quizOptions.forEach(btn => btn.disabled = true); // Tüm butonları pasif hale getir
+
+                    if (selectedAnswer === correctAnswer) {
+                        this.classList.add('correct');
+                        quizFeedback.textContent = "Harika! Doğru cevap. Ceylin'in Kütüphanesi'ne hoş geldiniz.";
+                        quizFeedback.style.color = '#28a745';
+                        quizFeedback.classList.add('visible');
+                        setTimeout(() => {
+                            entryScreen.classList.add('hidden');
+                            mainContent.classList.add('visible');
+                            header.classList.remove('hidden'); // Header'ı görünür yap
+                        }, 1800);
+                    } else {
+                        this.classList.add('wrong');
+                        quizOptions.forEach(btn => {
+                            if (btn.dataset.answer === correctAnswer) {
+                                btn.classList.add('correct');
+                            }
+                        });
+                        quizFeedback.textContent = `Maalesef yanlış cevap. Doğru cevap: "${correctAnswer}". Yine de hoş geldiniz!`;
+                        quizFeedback.style.color = '#dc3545';
+                        quizFeedback.classList.add('visible');
+                        setTimeout(() => {
+                            entryScreen.classList.add('hidden');
+                            mainContent.classList.add('visible');
+                            header.classList.remove('hidden'); // Header'ı görünür yap
+                        }, 2800);
+                    }
+                });
+            });
+
+            // Header Görünürlük Mantığı (Scroll ile gizleme/gösterme)
+            let lastScrollY = window.scrollY;
+            const headerHeight = header.offsetHeight;
+
+            window.addEventListener('scroll', () => {
+                if (!entryScreen.classList.contains('hidden')) {
+                    return; // Quiz ekranı aktifse header'ı gizle
+                }
+
+                if (window.scrollY > lastScrollY && window.scrollY > headerHeight) {
+                    // Aşağı kaydırırken ve header yüksekliğini aşınca gizle
+                    header.classList.add('hidden');
+                } else if (window.scrollY < lastScrollY) {
+                    // Yukarı kaydırırken göster
+                    header.classList.remove('hidden');
+                }
+                lastScrollY = window.scrollY;
+            });
+
+            // Başlangıçta header'ı gizle (quiz ekranı varken)
+            header.classList.add('hidden');
+
+            // Tema Modu
+            const themeToggle = document.getElementById('theme-checkbox');
+            const currentTheme = localStorage.getItem('theme');
+
+            if (currentTheme) {
+                document.body.classList.add(currentTheme);
+                if (currentTheme === 'dark-theme') {
+                    themeToggle.checked = true;
+                }
+            } else {
+                // Varsayılan olarak light-theme ayarlayın
+                document.body.classList.add('light-theme');
+                localStorage.setItem('theme', 'light-theme');
+            }
+
+            themeToggle.addEventListener('change', function() {
+                const theme = this.checked ? 'dark-theme' : 'light-theme';
+                document.body.className = theme; // Tüm class'ları silip yenisini ekler
+                localStorage.setItem('theme', theme);
+            });
+
+            // Yukarı Çık Butonu
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            window.addEventListener('scroll', () => {
+                scrollTopBtn.classList.toggle('visible', window.scrollY > 300);
+            });
+            scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+            // Kaydırmaya Duyarlı Animasyonlar (Intersection Observer)
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('anim-visible');
+                        // Sayaç animasyonunu tetikle (yalnızca Hakkımızda bölümü göründüğünde)
+                        if (entry.target.id === 'hakkimizda') {
+                            const counters = entry.target.querySelectorAll('.counter:not(.animated)');
+                            counters.forEach(counter => animateCounter(counter));
+                        }
+                    } else {
+                        // Element görünümden çıktığında animasyonu sıfırlamak isterseniz bu kısmı kullanabilirsiniz.
+                        // Ancak sayaçlar için bir kez animasyon yeterli olacaktır.
+                        // entry.target.classList.remove('anim-visible');
+                    }
+                });
+            }, { threshold: 0.1 }); // %10'u göründüğünde tetikle
+
+            // Tüm anim-hidden sınıflarına sahip elementleri gözlemle
+            document.querySelectorAll('.anim-hidden').forEach(el => observer.observe(el));
+
+            // Animasyonlu Sayaç Fonksiyonu
+            function animateCounter(counter) {
+                counter.classList.add('animated'); // Animasyonun bir daha çalışmasını engellemek için
+                const target = +counter.getAttribute('data-target');
+                const duration = 1500; // ms
+                let startTimestamp = null;
+
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    counter.innerText = Math.floor(progress * target);
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    } else {
+                        counter.innerText = target; // Tam değeri göster
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+
+            // Kategori Filtreleme
+            const filterContainer = document.querySelector('#kategoriler ul');
+            const bookCards = document.querySelectorAll('.book-card');
+            const noResultsMsg = document.getElementById('no-results');
+
+            filterContainer.addEventListener('click', (e) => {
+                if (e.target.tagName === 'LI' || e.target.closest('li')) {
+                    const targetLi = e.target.closest('li');
+                    // Aktif sınıfı kaldır ve yeniye ekle
+                    filterContainer.querySelector('.active').classList.remove('active');
+                    targetLi.classList.add('active');
+
+                    const filter = targetLi.dataset.filter;
+                    updateBookVisibility(filter, searchInput.value); // Arama terimini de dikkate al
+                }
+            });
+
+            // Anlık Arama
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('keyup', () => {
+                const currentFilter = filterContainer.querySelector('.active').dataset.filter;
+                updateBookVisibility(currentFilter, searchInput.value);
+            });
+
+            // Filtreleme ve Arama İçin Ortak Fonksiyon
+            function updateBookVisibility(category, searchTerm = '') {
+                let visibleCount = 0;
+                const normalizedSearchTerm = searchTerm.toLowerCase().trim();
+
+                bookCards.forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    const author = card.querySelector('.author').textContent.toLowerCase();
+                    const cardCategory = card.dataset.category ? card.dataset.category.toLowerCase() : ''; // Kategori yoksa boş string
+
+                    const categoryMatch = (category === 'all' || cardCategory === category);
+                    const searchMatch = (title.includes(normalizedSearchTerm) || author.includes(normalizedSearchTerm));
+
+                    if (categoryMatch && searchMatch) {
+                        card.style.display = 'flex'; // Tekrar flex yapısı kullanıldı
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                noResultsMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+
+            // 3D Kart Efekti (JavaScript ile)
+            bookCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+
+                    const rotateX = -y / 20; // Y ekseninde küçük bir eğim
+                    const rotateY = x / 20;  // X ekseninde küçük bir eğim
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`; // Hafif büyütme
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)'; // Eski haline döner
+                });
+
+                // Kitap kartının tıklanma (beğenme butonu dışı) durumunda rengini ayarlama
+                card.addEventListener('click', function(event) {
+                    // Beğenme butonuna tıklanıp tıklanmadığını kontrol et
+                    if (!event.target.closest('.like-button')) {
+                        // Eğer beğenme butonu değilse, 'clicked' sınıfını toggle et
+                        this.classList.toggle('clicked');
+                        // Turuncu rengi burada engelledik, artık sadece primary-color (mor) olacak.
+                        // İstediğiniz başka bir renk varsa, CSS'teki .book-card.clicked kısmını düzenleyebilirsiniz.
+                    }
+                });
+            });
+
+            // Beğen Butonu İşlevselliği
+            const likeButtons = document.querySelectorAll('.like-button');
+            likeButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.stopPropagation(); // Kartın 3D efekti veya başka bir tıklamasını engelle
+                    const icon = this.querySelector('i');
+                    if (this.classList.contains('liked')) {
+                        this.classList.remove('liked');
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        alert('Beğeni kaldırıldı!');
+                    } else {
+                        this.classList.add('liked');
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        alert('Beğenildi!');
+                    }
+                });
+            });
+
+            // Yorumlar Bölümü İşlevselliği
+            const yorumListesi = document.getElementById('yorum-listesi');
+            const yorumcuAdInput = document.getElementById('yorumcu-ad');
+            const yorumMetniInput = document.getElementById('yorum-metni');
+            const yorumGonderBtn = document.getElementById('yorum-gonder-btn');
+
+            // Başlangıç Yorumları
+            const yorumlar = [
+                { yazar: "Ali Şenol", icerik: "Güzel şık bir web sitesi kitaplar eklenince hep burayı kullanacağım.", tarih: "10 Temmuz 2025" },
+                { yazar: "Ayşe Yılmaz", icerik: "Kitapları beğenme özelliği çok hoş olmuş ama tek sıkıntı gaha kitaplar yok😢😢😢😢.", tarih: "10 Temmuz 2025" },
+                { yazar: "Mehmet Can", icerik: "Tebrik ederim başarılı bir e-kitp sitesi inşallah uygulama olarakta yapılır.", tarih: "12 Temmuz 2025" }
+            ];
+
+            function yorumEkle(yazar, icerik, tarih) {
+                const yorumKutusu = document.createElement('div');
+                yorumKutusu.classList.add('yorum-kutusu', 'anim-hidden'); // Animasyon için sınıf ekle
+                yorumKutusu.innerHTML = `
+                    <p class="yorum-yazar">${yazar}</p>
+                    <p class="yorum-icerik">"${icerik}"</p>
+                    <p class="yorum-tarih">${tarih}</p>
+                `;
+                yorumListesi.prepend(yorumKutusu); // Yeni yorumu en üste ekle
+                // Yorum eklendikten sonra hemen animasyonu tetikle
+                setTimeout(() => {
+                    yorumKutusu.classList.add('anim-visible');
+                }, 100);
+            }
+
+            // Mevcut yorumları yükle
+            yorumlar.forEach(yorum => yorumEkle(yorum.yazar, yorum.icerik, yorum.tarih));
+
+            // Yeni yorum gönderme
+            yorumGonderBtn.addEventListener('click', function() {
+                const yazar = yorumcuAdInput.value.trim();
+                const metin = yorumMetniInput.value.trim();
+
+                if (yazar === '' || metin === '') {
+                    alert('Lütfen adınızı ve yorumunuzu girin!');
+                    return;
+                }
+
+                const now = new Date();
+                const tarih = `${now.getDate()} ${now.toLocaleString('tr-TR', { month: 'long' })} ${now.getFullYear()}`;
+
+                yorumEkle(yazar, metin, tarih);
+
+                // Formu temizle
+                yorumcuAdInput.value = '';
+                yorumMetniInput.value = '';
+
+                alert('Yorumunuz başarıyla eklendi!');
+            });
+
+            // Başlangıçta tüm kitapları ve "Tümü" kategorisini aktif yap
+            updateBookVisibility('all', '');
+        });
+    </script>
+
+</body>
+</html>
