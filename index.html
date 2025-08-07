@@ -3,138 +3,671 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Özür Dilerim - Şok Şok Şok!</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <title>Aşk Mantık İntikam - Bağımsız Sorular</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Comic Sans MS', 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96cecf);
-            background-size: 400%;
-            animation: gradient 10s ease infinite;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            color: #fff;
+            color: #333;
+        }
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 800px;
+            padding: 30px;
             text-align: center;
+            animation: fadeIn 1s ease-in-out;
         }
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            max-width: 90%;
-            width: 500px;
-            transition: transform 0.3s;
-        }
-        .container:hover {
-            transform: scale(1.05);
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         h1 {
-            font-size: 2em;
-            margin-bottom: 30px;
-            color: #e84393;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            line-height: 1.5;
+            font-family: 'Playfair Display', serif;
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .scene-text {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 5px solid #e91e63;
+        }
+        .result-text {
+            font-size: 1.1em;
+            color: #e91e63;
+            margin-bottom: 15px;
+            font-style: italic;
+            animation: slideIn 0.5s ease-in-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
         button {
-            background: linear-gradient(45deg, #ff9ff3, #feca57);
-            color: #2d3436;
+            background: #e91e63;
+            color: white;
             border: none;
-            padding: 15px 30px;
-            margin: 15px;
-            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 1em;
+            border-radius: 20px;
             cursor: pointer;
-            font-size: 1.2em;
-            font-weight: bold;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s, transform 0.2s;
         }
         button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            background: #c2185b;
+            transform: scale(1.03);
         }
-        button:active {
-            transform: scale(0.95);
+        button:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
         }
-        #sorryNote {
-            display: none;
-            margin-top: 30px;
-            font-size: 1.5em;
-            color: #ff4757;
-            font-weight: bold;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-            line-height: 1.6;
+        .continue-btn {
+            background: #2196f3;
         }
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-                width: 90%;
-            }
-            h1 {
-                font-size: 1.5em;
-            }
-            button {
-                padding: 12px 20px;
-                font-size: 1em;
-            }
+        .continue-btn:hover {
+            background: #1976d2;
+        }
+        .score {
+            margin-top: 20px;
+            font-size: 1em;
+            color: #555;
+        }
+        .error {
+            color: red;
+            font-size: 1.1em;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
-    <div class="container" id="container">
-        <h1 id="question">Instagram hesabını ben çalmadım bana inan lütfen.</h1>
-        <button onclick="believe()">İnanıyorum</button>
-        <button onclick="dontBelieve()">İnanmıyorum</button>
-        <div id="sorryNote">Ben yapmadım ama yinede "ÖZÜR DİLERİM"</div>
+    <div class="game-container">
+        <h1>Aşk Mantık İntikam</h1>
+        <div class="scene-text" id="scene-text">Oyun yükleniyor...</div>
+        <div class="result-text" id="result-text"></div>
+        <div class="choices" id="choices"></div>
+        <div class="score" id="score"></div>
+        <div class="error" id="error"></div>
     </div>
 
     <script>
-        let stage = 1;
+        let player = { love: 0, logic: 0, revenge: 0 };
+        let visitedScenes = new Set();
+        let currentSceneId = 0;
+        let lastResult = '';
+        let isShowingResult = false;
+        let nextSceneId = 0;
 
-        function believe() {
-            confetti({
-                particleCount: 200,
-                spread: 100,
-                origin: { y: 0.5 },
-                colors: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#feca57', '#ff9ff3'],
-                shapes: ['star', 'circle'],
-                scalar: 1.5
-            });
-            setTimeout(() => {
-                confetti({
-                    particleCount: 100,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 }
+        const scenes = [
+            {
+                id: 0,
+                text: "Esra, Ozan’ın şirketinde bir sunum yapıyor. Ozan seni dikkatle izliyor. Sunum sonunda ne yaparsın?",
+                choices: [
+                    { text: "Ozan’a teşekkür et.", nextScene: 1, points: { love: 3 }, result: "Ozan gülümsedi ve sana iltifat etti." },
+                    { text: "Patrona rapor sun.", nextScene: 1, points: { logic: 3 }, result: "Patronun seni takdir etti." },
+                    { text: "Ozan’a iğneleyici bir yorum yap.", nextScene: 1, points: { revenge: 3 }, result: "Ozan sinirlendi, ortam gerildi." }
+                ]
+            },
+            {
+                id: 1,
+                text: "Çınar, seni kahve içmeye davet ediyor. Ofiste herkes bunu konuşuyor. Ne yaparsın?",
+                choices: [
+                    { text: "Daveti kabul et.", nextScene: 2, points: { love: 3 }, result: "Çınar’la keyifli bir sohbet ettiniz." },
+                    { text: "Reddet ve işe odaklan.", nextScene: 2, points: { logic: 3 }, result: "Dedikodular azaldı, işine devam ettin." },
+                    { text: "Ozan’ı kıskandırmak için flört et.", nextScene: 2, points: { revenge: 3 }, result: "Ozan kıskandı ve sana mesafeli davrandı." }
+                ]
+            },
+            {
+                id: 2,
+                text: "Menekşe, Ozan’ın yeni bir proje aldığını söylüyor ve seni uyarıyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la konuş.", nextScene: 3, points: { love: 3 }, result: "Ozan samimiydi, ama projeyi gizledi." },
+                    { text: "Projeyi araştır.", nextScene: 3, points: { logic: 3 }, result: "Proje hakkında bilgi topladın." },
+                    { text: "Menekşe’ye iğneleyici cevap ver.", nextScene: 3, points: { revenge: 3 }, result: "Menekşe sinirlendi ve uzaklaştı." }
+                ]
+            },
+            {
+                id: 3,
+                text: "Zeynep, seni bir partiye davet ediyor. Ozan da orada olacak. Ne yaparsın?",
+                choices: [
+                    { text: "Partiye git ve Ozan’la konuş.", nextScene: 4, points: { love: 4 }, result: "Ozan’la keyifli bir an geçirdiniz." },
+                    { text: "Daveti reddet.", nextScene: 4, points: { logic: 3 }, result: "Zeynep hayal kırıklığına uğradı." },
+                    { text: "Partiye git, ama Ozan’ı görmezden gel.", nextScene: 4, points: { revenge: 3 }, result: "Ozan üzüldü, ama sen eğlendin." }
+                ]
+            },
+            {
+                id: 4,
+                text: "Ozan, sana eski bir fotoğrafınızı gösteriyor. Ne yaparsın?",
+                choices: [
+                    { text: "Duygularını paylaş.", nextScene: 5, points: { love: 4 }, result: "Ozan duygulandı, aranızda bir bağ oluştu." },
+                    { text: "Konuyu değiştir.", nextScene: 5, points: { logic: 3 }, result: "Ozan saygı duydu, ama mesafeli kaldı." },
+                    { text: "Fotoğrafı al ve yırt.", nextScene: 5, points: { revenge: 3 }, result: "Ozan şok oldu ve sinirlendi." }
+                ]
+            },
+            {
+                id: 5,
+                text: "Esra, bir projede Ozan’la çalışmak zorunda. Toplantıda ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la iş birliği yap.", nextScene: 6, points: { love: 3 }, result: "Ozan seninle çalışmaktan memnun kaldı." },
+                    { text: "Kendi fikirlerini öne çıkar.", nextScene: 6, points: { logic: 3 }, result: "Patronun fikirlerini beğendi." },
+                    { text: "Ozan’ın fikrini eleştir.", nextScene: 6, points: { revenge: 3 }, result: "Ozan sinirlendi, toplantı gerildi." }
+                ]
+            },
+            {
+                id: 6,
+                text: "Çınar, seni yemeğe davet ediyor. Ozan bunu duyuyor. Ne yaparsın?",
+                choices: [
+                    { text: "Daveti kabul et.", nextScene: 7, points: { love: 3 }, result: "Çınar’la güzel bir akşam geçirdin." },
+                    { text: "Reddet ve işe odaklan.", nextScene: 7, points: { logic: 3 }, result: "Ozan rahatladı, ama Çınar üzüldü." },
+                    { text: "Ozan’ı kıskandırmak için flört et.", nextScene: 7, points: { revenge: 3 }, result: "Ozan kıskandı ve sana soğuk davrandı." }
+                ]
+            },
+            {
+                id: 7,
+                text: "Menekşe, sana Ozan’ın yeni bir sevgilisi olduğunu söylüyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la konuş.", nextScene: 8, points: { love: 3 }, result: "Ozan, dedikoduların yalan olduğunu söyledi." },
+                    { text: "Menekşe’yi sorgula.", nextScene: 8, points: { logic: 3 }, result: "Menekşe’nin yalan söylediğini öğrendin." },
+                    { text: "Ozan’ı görmezden gel.", nextScene: 8, points: { revenge: 3 }, result: "Ozan üzüldü, ama sen umursamadın." }
+                ]
+            },
+            {
+                id: 8,
+                text: "Zeynep, Ozan’ın seni sorduğunu söylüyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la konuş.", nextScene: 9, points: { love: 3 }, result: "Ozan seninle samimi bir sohbet etti." },
+                    { text: "Zeynep’e teşekkür et ve devam et.", nextScene: 9, points: { logic: 3 }, result: "Zeynep seninle daha yakın oldu." },
+                    { text: "Ozan’a iğneleyici bir mesaj at.", nextScene: 9, points: { revenge: 3 }, result: "Ozan sinirlendi ve cevap vermedi." }
+                ]
+            },
+            {
+                id: 9,
+                text: "Ozan, sana bir hediye veriyor. Ne yaparsın?",
+                choices: [
+                    { text: "Hediyeyi kabul et.", nextScene: 10, points: { love: 4 }, result: "Ozan mutlu oldu, aranızda bir bağ oluştu." },
+                    { text: "Nazikçe reddet.", nextScene: 10, points: { logic: 3 }, result: "Ozan saygı duydu, ama üzüldü." },
+                    { text: "Hediyeyi al ve Çınar’a göster.", nextScene: 10, points: { revenge: 3 }, result: "Ozan kıskandı ve sinirlendi." }
+                ]
+            },
+            {
+                id: 10,
+                text: "Esra, Ozan’ın ofisinde eski bir mektubunu buluyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la mektubu konuş.", nextScene: 11, points: { love: 3 }, result: "Ozan duygulandı, eski anıları hatırladınız." },
+                    { text: "Mektubu oku ve sakla.", nextScene: 11, points: { logic: 3 }, result: "Mektubu sakladın, ama kimse fark etmedi." },
+                    { text: "Mektubu yırt.", nextScene: 11, points: { revenge: 3 }, result: "Ozan mektubu bulamayınca üzüldü." }
+                ]
+            },
+            {
+                id: 11,
+                text: "Çınar, sana bir proje için yardım teklif ediyor. Ne yaparsın?",
+                choices: [
+                    { text: "Yardımı kabul et.", nextScene: 12, points: { love: 3 }, result: "Çınar’la çalışmak keyifliydi." },
+                    { text: "Kendi başına yap.", nextScene: 12, points: { logic: 3 }, result: "Projen başarılı oldu, ama yoruldun." },
+                    { text: "Ozan’ı kıskandırmak için Çınar’la flört et.", nextScene: 12, points: { revenge: 3 }, result: "Ozan sinirlendi ve uzaklaştı." }
+                ]
+            },
+            {
+                id: 12,
+                text: "Menekşe, seni bir etkinliğe davet ediyor. Ozan da orada olacak. Ne yaparsın?",
+                choices: [
+                    { text: "Daveti kabul et.", nextScene: 13, points: { love: 3 }, result: "Ozan’la güzel bir akşam geçirdin." },
+                    { text: "Daveti reddet.", nextScene: 13, points: { logic: 3 }, result: "Menekşe üzüldü, ama sen rahatladın." },
+                    { text: "Git, ama Menekşe’ye iğneleyici yorum yap.", nextScene: 13, points: { revenge: 3 }, result: "Menekşe sinirlendi, Ozan gerildi." }
+                ]
+            },
+            {
+                id: 13,
+                text: "Zeynep, Ozan’ın seninle konuşmak istediğini söylüyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la buluş.", nextScene: 14, points: { love: 3 }, result: "Ozan’la samimi bir sohbet ettiniz." },
+                    { text: "Zeynep’e teşekkür et, ama gitme.", nextScene: 14, points: { logic: 3 }, result: "Zeynep anlayış gösterdi." },
+                    { text: "Ozan’a soğuk bir mesaj at.", nextScene: 14, points: { revenge: 3 }, result: "Ozan üzüldü ve cevap vermedi." }
+                ]
+            },
+            {
+                id: 14,
+                text: "Ozan, sana bir iş teklifinde bulunuyor. Ne yaparsın?",
+                choices: [
+                    { text: "Teklifi kabul et.", nextScene: 15, points: { love: 3 }, result: "Ozan seninle çalışmaktan memnun oldu." },
+                    { text: "Teklifi reddet.", nextScene: 15, points: { logic: 3 }, result: "Ozan saygı duydu, ama mesafeliydi." },
+                    { text: "Teklifi alaycı bir şekilde reddet.", nextScene: 15, points: { revenge: 3 }, result: "Ozan sinirlendi ve uzaklaştı." }
+                ]
+            },
+            {
+                id: 15,
+                text: "Esra, Ozan’ın şirketinde bir ödül kazanıyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la kutla.", nextScene: 16, points: { love: 3 }, result: "Ozan seninle gurur duydu." },
+                    { text: "Sessizce devam et.", nextScene: 16, points: { logic: 3 }, result: "Başarın konuşuldu, ama dikkat çekmedin." },
+                    { text: "Ozan’ın projesini gölgele.", nextScene: 16, points: { revenge: 3 }, result: "Ozan sinirlendi, ama sen öne çıktın." }
+                ]
+            },
+            {
+                id: 16,
+                text: "Çınar, seni bir konsere davet ediyor. Ne yaparsın?",
+                choices: [
+                    { text: "Daveti kabul et.", nextScene: 17, points: { love: 3 }, result: "Çınar’la eğlenceli bir akşam geçirdin." },
+                    { text: "Reddet ve işe odaklan.", nextScene: 17, points: { logic: 3 }, result: "Çınar üzüldü, ama sen işine devam ettin." },
+                    { text: "Ozan’ı kıskandırmak için git.", nextScene: 17, points: { revenge: 3 }, result: "Ozan kıskandı ve sana soğuk davrandı." }
+                ]
+            },
+            {
+                id: 17,
+                text: "Menekşe, Ozan’ın yeni bir ortakla çalıştığını söylüyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la konuş.", nextScene: 18, points: { love: 3 }, result: "Ozan, işinin iyi gittiğini söyledi." },
+                    { text: "Menekşe’yi sorgula.", nextScene: 18, points: { logic: 3 }, result: "Menekşe’nin abarttığını öğrendin." },
+                    { text: "Ozan’ı görmezden gel.", nextScene: 18, points: { revenge: 3 }, result: "Ozan üzüldü, ama sen umursamadın." }
+                ]
+            },
+            {
+                id: 18,
+                text: "Zeynep, seni Ozan’la bir projede eşleştiriyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la iş birliği yap.", nextScene: 19, points: { love: 3 }, result: "Ozan’la çalışmak keyifliydi." },
+                    { text: "Kendi yolunu çiz.", nextScene: 19, points: { logic: 3 }, result: "Projen başarılı oldu, ama yalnız çalıştın." },
+                    { text: "Ozan’ın fikirlerini eleştir.", nextScene: 19, points: { revenge: 3 }, result: "Ozan sinirlendi, proje gerildi." }
+                ]
+            },
+            {
+                id: 19,
+                text: "Ozan, sana bir özür mektubu yazıyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la konuş.", nextScene: 20, points: { love: 4 }, result: "Ozan samimiydi, aranız düzeldi." },
+                    { text: "Mektubu oku ve sakla.", nextScene: 20, points: { logic: 3 }, result: "Mektubu sakladın, ama cevap vermedin." },
+                    { text: "Mektubu yırt.", nextScene: 20, points: { revenge: 3 }, result: "Ozan üzüldü, ama sen umursamadın." }
+                ]
+            },
+            {
+                id: 20,
+                text: "Esra, Ozan’ın şirketinde bir sunum yapıyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’a teşekkür et.", nextScene: 21, points: { love: 3 }, result: "Ozan gülümsedi ve sana iltifat etti." },
+                    { text: "Patrona rapor sun.", nextScene: 21, points: { logic: 3 }, result: "Patronun seni takdir etti." },
+                    { text: "Ozan’a iğneleyici bir yorum yap.", nextScene: 21, points: { revenge: 3 }, result: "Ozan sinirlendi, ortam gerildi." }
+                ]
+            },
+            {
+                id: 21,
+                text: "Çınar, seni kahve içmeye davet ediyor. Ne yaparsın?",
+                choices: [
+                    { text: "Daveti kabul et.", nextScene: 22, points: { love: 3 }, result: "Çınar’la keyifli bir sohbet ettiniz." },
+                    { text: "Reddet ve işe odaklan.", nextScene: 22, points: { logic: 3 }, result: "Dedikodular azaldı, işine devam ettin." },
+                    { text: "Ozan’ı kıskandırmak için flört et.", nextScene: 22, points: { revenge: 3 }, result: "Ozan kıskandı ve sana mesafeli davrandı." }
+                ]
+            },
+            {
+                id: 22,
+                text: "Menekşe, Ozan’ın yeni bir proje aldığını söylüyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la konuş.", nextScene: 23, points: { love: 3 }, result: "Ozan samimiydi, ama projeyi gizledi." },
+                    { text: "Projeyi araştır.", nextScene: 23, points: { logic: 3 }, result: "Proje hakkında bilgi topladın." },
+                    { text: "Menekşe’ye iğneleyici cevap ver.", nextScene: 23, points: { revenge: 3 }, result: "Menekşe sinirlendi ve uzaklaştı." }
+                ]
+            },
+            {
+                id: 23,
+                text: "Zeynep, seni bir partiye davet ediyor. Ne yaparsın?",
+                choices: [
+                    { text: "Partiye git ve Ozan’la konuş.", nextScene: 24, points: { love: 4 }, result: "Ozan’la keyifli bir an geçirdiniz." },
+                    { text: "Daveti reddet.", nextScene: 24, points: { logic: 3 }, result: "Zeynep hayal kırıklığına uğradı." },
+                    { text: "Partiye git, ama Ozan’ı görmezden gel.", nextScene: 24, points: { revenge: 3 }, result: "Ozan üzüldü, ama sen eğlendin." }
+                ]
+            },
+            {
+                id: 24,
+                text: "Ozan, sana eski bir fotoğrafınızı gösteriyor. Ne yaparsın?",
+                choices: [
+                    { text: "Duygularını paylaş.", nextScene: 25, points: { love: 4 }, result: "Ozan duygulandı, aranızda bir bağ oluştu." },
+                    { text: "Konuyu değiştir.", nextScene: 25, points: { logic: 3 }, result: "Ozan saygı duydu, ama mesafeli kaldı." },
+                    { text: "Fotoğrafı al ve yırt.", nextScene: 25, points: { revenge: 3 }, result: "Ozan şok oldu ve sinirlendi." }
+                ]
+            },
+            {
+                id: 25,
+                text: "Esra, bir projede Ozan’la çalışmak zorunda. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la iş birliği yap.", nextScene: 26, points: { love: 3 }, result: "Ozan seninle çalışmaktan memnun kaldı." },
+                    { text: "Kendi fikirlerini öne çıkar.", nextScene: 26, points: { logic: 3 }, result: "Patronun fikirlerini beğendi." },
+                    { text: "Ozan’ın fikrini eleştir.", nextScene: 26, points: { revenge: 3 }, result: "Ozan sinirlendi, toplantı gerildi." }
+                ]
+            },
+            {
+                id: 26,
+                text: "Çınar, seni yemeğe davet ediyor. Ne yaparsın?",
+                choices: [
+                    { text: "Daveti kabul et.", nextScene: 27, points: { love: 3 }, result: "Çınar’la güzel bir akşam geçirdin." },
+                    { text: "Reddet ve işe odaklan.", nextScene: 27, points: { logic: 3 }, result: "Ozan rahatladı, ama Çınar üzüldü." },
+                    { text: "Ozan’ı kıskandırmak için flört et.", nextScene: 27, points: { revenge: 3 }, result: "Ozan kıskandı ve sana soğuk davrandı." }
+                ]
+            },
+            {
+                id: 27,
+                text: "Menekşe, Ozan’ın yeni bir sevgilisi olduğunu söylüyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la konuş.", nextScene: 28, points: { love: 3 }, result: "Ozan, dedikoduların yalan olduğunu söyledi." },
+                    { text: "Menekşe’yi sorgula.", nextScene: 28, points: { logic: 3 }, result: "Menekşe’nin yalan söylediğini öğrendin." },
+                    { text: "Ozan’ı görmezden gel.", nextScene: 28, points: { revenge: 3 }, result: "Ozan üzüldü, ama sen umursamadın." }
+                ]
+            },
+            {
+                id: 28,
+                text: "Zeynep, Ozan’ın seni sorduğunu söylüyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la konuş.", nextScene: 29, points: { love: 3 }, result: "Ozan seninle samimi bir sohbet etti." },
+                    { text: "Zeynep’e teşekkür et ve devam et.", nextScene: 29, points: { logic: 3 }, result: "Zeynep seninle daha yakın oldu." },
+                    { text: "Ozan’a iğneleyici bir mesaj at.", nextScene: 29, points: { revenge: 3 }, result: "Ozan sinirlendi ve cevap vermedi." }
+                ]
+            },
+            {
+                id: 29,
+                text: "Ozan, sana bir hediye veriyor. Ne yaparsın?",
+                choices: [
+                    { text: "Hediyeyi kabul et.", nextScene: 30, points: { love: 4 }, result: "Ozan mutlu oldu, aranızda bir bağ oluştu." },
+                    { text: "Nazikçe reddet.", nextScene: 30, points: { logic: 3 }, result: "Ozan saygı duydu, ama üzüldü." },
+                    { text: "Hediyeyi al ve Çınar’a göster.", nextScene: 30, points: { revenge: 3 }, result: "Ozan kıskandı ve sinirlendi." }
+                ]
+            },
+            {
+                id: 30,
+                text: "Esra, Ozan’ın ofisinde eski bir mektubunu buluyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la mektubu konuş.", nextScene: 31, points: { love: 3 }, result: "Ozan duygulandı, eski anıları hatırladınız." },
+                    { text: "Mektubu oku ve sakla.", nextScene: 31, points: { logic: 3 }, result: "Mektubu sakladın, ama kimse fark etmedi." },
+                    { text: "Mektubu yırt.", nextScene: 31, points: { revenge: 3 }, result: "Ozan mektubu bulamayınca üzüldü." }
+                ]
+            },
+            {
+                id: 31,
+                text: "Çınar, sana bir proje için yardım teklif ediyor. Ne yaparsın?",
+                choices: [
+                    { text: "Yardımı kabul et.", nextScene: 32, points: { love: 3 }, result: "Çınar’la çalışmak keyifliydi." },
+                    { text: "Kendi başına yap.", nextScene: 32, points: { logic: 3 }, result: "Projen başarılı oldu, ama yoruldun." },
+                    { text: "Ozan’ı kıskandırmak için Çınar’la flört et.", nextScene: 32, points: { revenge: 3 }, result: "Ozan sinirlendi ve uzaklaştı." }
+                ]
+            },
+            {
+                id: 32,
+                text: "Menekşe, seni bir etkinliğe davet ediyor. Ne yaparsın?",
+                choices: [
+                    { text: "Daveti kabul et.", nextScene: 33, points: { love: 3 }, result: "Ozan’la güzel bir akşam geçirdin." },
+                    { text: "Daveti reddet.", nextScene: 33, points: { logic: 3 }, result: "Menekşe üzüldü, ama sen rahatladın." },
+                    { text: "Git, ama Menekşe’ye iğneleyici yorum yap.", nextScene: 33, points: { revenge: 3 }, result: "Menekşe sinirlendi, Ozan gerildi." }
+                ]
+            },
+            {
+                id: 33,
+                text: "Zeynep, Ozan’ın seninle konuşmak istediğini söylüyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la buluş.", nextScene: 34, points: { love: 3 }, result: "Ozan’la samimi bir sohbet ettiniz." },
+                    { text: "Zeynep’e teşekkür et, ama gitme.", nextScene: 34, points: { logic: 3 }, result: "Zeynep anlayış gösterdi." },
+                    { text: "Ozan’a soğuk bir mesaj at.", nextScene: 34, points: { revenge: 3 }, result: "Ozan üzüldü ve cevap vermedi." }
+                ]
+            },
+            {
+                id: 34,
+                text: "Ozan, sana bir iş teklifinde bulunuyor. Ne yaparsın?",
+                choices: [
+                    { text: "Teklifi kabul et.", nextScene: 35, points: { love: 3 }, result: "Ozan seninle çalışmaktan memnun oldu." },
+                    { text: "Teklifi reddet.", nextScene: 35, points: { logic: 3 }, result: "Ozan saygı duydu, ama mesafeliydi." },
+                    { text: "Teklifi alaycı bir şekilde reddet.", nextScene: 35, points: { revenge: 3 }, result: "Ozan sinirlendi ve uzaklaştı." }
+                ]
+            },
+            {
+                id: 35,
+                text: "Esra, Ozan’ın şirketinde bir ödül kazanıyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la kutla.", nextScene: 36, points: { love: 3 }, result: "Ozan seninle gurur duydu." },
+                    { text: "Sessizce devam et.", nextScene: 36, points: { logic: 3 }, result: "Başarın konuşuldu, ama dikkat çekmedin." },
+                    { text: "Ozan’ın projesini gölgele.", nextScene: 36, points: { revenge: 3 }, result: "Ozan sinirlendi, ama sen öne çıktın." }
+                ]
+            },
+            {
+                id: 36,
+                text: "Çınar, seni bir konsere davet ediyor. Ne yaparsın?",
+                choices: [
+                    { text: "Daveti kabul et.", nextScene: 37, points: { love: 3 }, result: "Çınar’la eğlenceli bir akşam geçirdin." },
+                    { text: "Reddet ve işe odaklan.", nextScene: 37, points: { logic: 3 }, result: "Çınar üzüldü, ama sen işine devam ettin." },
+                    { text: "Ozan’ı kıskandırmak için git.", nextScene: 37, points: { revenge: 3 }, result: "Ozan kıskandı ve sana soğuk davrandı." }
+                ]
+            },
+            {
+                id: 37,
+                text: "Menekşe, Ozan’ın yeni bir ortakla çalıştığını söylüyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la konuş.", nextScene: 38, points: { love: 3 }, result: "Ozan, işinin iyi gittiğini söyledi." },
+                    { text: "Menekşe’yi sorgula.", nextScene: 38, points: { logic: 3 }, result: "Menekşe’nin abarttığını öğrendin." },
+                    { text: "Ozan’ı görmezden gel.", nextScene: 38, points: { revenge: 3 }, result: "Ozan üzüldü, ama sen umursamadın." }
+                ]
+            },
+            {
+                id: 38,
+                text: "Zeynep, seni Ozan’la bir projede eşleştiriyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la iş birliği yap.", nextScene: 39, points: { love: 3 }, result: "Ozan’la çalışmak keyifliydi." },
+                    { text: "Kendi yolunu çiz.", nextScene: 39, points: { logic: 3 }, result: "Projen başarılı oldu, ama yalnız çalıştın." },
+                    { text: "Ozan’ın fikirlerini eleştir.", nextScene: 39, points: { revenge: 3 }, result: "Ozan sinirlendi, proje gerildi." }
+                ]
+            },
+            {
+                id: 39,
+                text: "Ozan, sana bir özür mektubu yazıyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la konuş.", nextScene: 40, points: { love: 4 }, result: "Ozan samimiydi, aranız düzeldi." },
+                    { text: "Mektubu oku ve sakla.", nextScene: 40, points: { logic: 3 }, result: "Mektubu sakladın, ama cevap vermedin." },
+                    { text: "Mektubu yırt.", nextScene: 40, points: { revenge: 3 }, result: "Ozan üzüldü, ama sen umursamadın." }
+                ]
+            },
+            {
+                id: 40,
+                text: "Esra, Ozan’ın şirketinde bir sunum yapıyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’a teşekkür et.", nextScene: 41, points: { love: 3 }, result: "Ozan gülümsedi ve sana iltifat etti." },
+                    { text: "Patrona rapor sun.", nextScene: 41, points: { logic: 3 }, result: "Patronun seni takdir etti." },
+                    { text: "Ozan’a iğneleyici bir yorum yap.", nextScene: 41, points: { revenge: 3 }, result: "Ozan sinirlendi, ortam gerildi." }
+                ]
+            },
+            {
+                id: 41,
+                text: "Çınar, seni kahve içmeye davet ediyor. Ne yaparsın?",
+                choices: [
+                    { text: "Daveti kabul et.", nextScene: 42, points: { love: 3 }, result: "Çınar’la keyifli bir sohbet ettiniz." },
+                    { text: "Reddet ve işe odaklan.", nextScene: 42, points: { logic: 3 }, result: "Dedikodular azaldı, işine devam ettin." },
+                    { text: "Ozan’ı kıskandırmak için flört et.", nextScene: 42, points: { revenge: 3 }, result: "Ozan kıskandı ve sana mesafeli davrandı." }
+                ]
+            },
+            {
+                id: 42,
+                text: "Menekşe, Ozan’ın yeni bir proje aldığını söylüyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la konuş.", nextScene: 43, points: { love: 3 }, result: "Ozan samimiydi, ama projeyi gizledi." },
+                    { text: "Projeyi araştır.", nextScene: 43, points: { logic: 3 }, result: "Proje hakkında bilgi topladın." },
+                    { text: "Menekşe’ye iğneleyici cevap ver.", nextScene: 43, points: { revenge: 3 }, result: "Menekşe sinirlendi ve uzaklaştı." }
+                ]
+            },
+            {
+                id: 43,
+                text: "Zeynep, seni bir partiye davet ediyor. Ne yaparsın?",
+                choices: [
+                    { text: "Partiye git ve Ozan’la konuş.", nextScene: 44, points: { love: 4 }, result: "Ozan’la keyifli bir an geçirdiniz." },
+                    { text: "Daveti reddet.", nextScene: 44, points: { logic: 3 }, result: "Zeynep hayal kırıklığına uğradı." },
+                    { text: "Partiye git, ama Ozan’ı görmezden gel.", nextScene: 44, points: { revenge: 3 }, result: "Ozan üzüldü, ama sen eğlendin." }
+                ]
+            },
+            {
+                id: 44,
+                text: "Ozan, sana eski bir fotoğrafınızı gösteriyor. Ne yaparsın?",
+                choices: [
+                    { text: "Duygularını paylaş.", nextScene: 45, points: { love: 4 }, result: "Ozan duygulandı, aranızda bir bağ oluştu." },
+                    { text: "Konuyu değiştir.", nextScene: 45, points: { logic: 3 }, result: "Ozan saygı duydu, ama mesafeli kaldı." },
+                    { text: "Fotoğrafı al ve yırt.", nextScene: 45, points: { revenge: 3 }, result: "Ozan şok oldu ve sinirlendi." }
+                ]
+            },
+            {
+                id: 45,
+                text: "Esra, bir projede Ozan’la çalışmak zorunda. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la iş birliği yap.", nextScene: 46, points: { love: 3 }, result: "Ozan seninle çalışmaktan memnun kaldı." },
+                    { text: "Kendi fikirlerini öne çıkar.", nextScene: 46, points: { logic: 3 }, result: "Patronun fikirlerini beğendi." },
+                    { text: "Ozan’ın fikrini eleştir.", nextScene: 46, points: { revenge: 3 }, result: "Ozan sinirlendi, toplantı gerildi." }
+                ]
+            },
+            {
+                id: 46,
+                text: "Çınar, seni yemeğe davet ediyor. Ne yaparsın?",
+                choices: [
+                    { text: "Daveti kabul et.", nextScene: 47, points: { love: 3 }, result: "Çınar’la güzel bir akşam geçirdin." },
+                    { text: "Reddet ve işe odaklan.", nextScene: 47, points: { logic: 3 }, result: "Ozan rahatladı, ama Çınar üzüldü." },
+                    { text: "Ozan’ı kıskandırmak için flört et.", nextScene: 47, points: { revenge: 3 }, result: "Ozan kıskandı ve sana soğuk davrandı." }
+                ]
+            },
+            {
+                id: 47,
+                text: "Menekşe, Ozan’ın yeni bir sevgilisi olduğunu söylüyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la konuş.", nextScene: 48, points: { love: 3 }, result: "Ozan, dedikoduların yalan olduğunu söyledi." },
+                    { text: "Menekşe’yi sorgula.", nextScene: 48, points: { logic: 3 }, result: "Menekşe’nin yalan söylediğini öğrendin." },
+                    { text: "Ozan’ı görmezden gel.", nextScene: 48, points: { revenge: 3 }, result: "Ozan üzüldü, ama sen umursamadın." }
+                ]
+            },
+            {
+                id: 48,
+                text: "Zeynep, Ozan’ın seni sorduğunu söylüyor. Ne yaparsın?",
+                choices: [
+                    { text: "Ozan’la konuş.", nextScene: 49, points: { love: 3 }, result: "Ozan seninle samimi bir sohbet etti." },
+                    { text: "Zeynep’e teşekkür et ve devam et.", nextScene: 49, points: { logic: 3 }, result: "Zeynep seninle daha yakın oldu." },
+                    { text: "Ozan’a iğneleyici bir mesaj at.", nextScene: 49, points: { revenge: 3 }, result: "Ozan sinirlendi ve cevap vermedi." }
+                ]
+            },
+            {
+                id: 49,
+                text: "Ozan, sana bir hediye veriyor. Son kararın ne olacak?",
+                choices: [
+                    { text: "Hediyeyi kabul et.", nextScene: 50, points: { love: 5 }, result: "Ozan’la mutlu bir an yaşadın." },
+                    { text: "Nazikçe reddet.", nextScene: 50, points: { logic: 4 }, result: "Kendi yolunu seçtin." },
+                    { text: "Hediyeyi al ve Çınar’a göster.", nextScene: 50, points: { revenge: 3 }, result: "Ozan kıskandı, ama sen zafer kazandın." }
+                ]
+            },
+            {
+                id: 50,
+                text: "Hikayen sona erdi! Kararların seni nereye götürdü?",
+                choices: [
+                    { text: "Aşk yolunu seç.", nextScene: 50, points: { love: 5 }, result: "Aşk kazandı, kalbin huzurlu." },
+                    { text: "Mantık yolunu seç.", nextScene: 50, points: { logic: 5 }, result: "Mantık galip geldi, kariyerin zirvede." },
+                    { text: "İntikam yolunu seç.", nextScene: 50, points: { revenge: 5 }, result: "İntikam aldın, ama yalnızsın." }
+                ]
+            }
+        ];
+
+        function renderScene(sceneId) {
+            if (sceneId < 0 || sceneId >= scenes.length) {
+                document.getElementById('error').innerText = `Hata: Geçersiz sahne ID’si (${sceneId})!`;
+                console.error("Geçersiz sahne ID’si: " + sceneId);
+                endGame();
+                return;
+            }
+
+            const scene = scenes.find(s => s.id === sceneId);
+            if (!scene) {
+                document.getElementById('error').innerText = `Hata: Sahne ${sceneId} bulunamadı!`;
+                console.error("Sahne bulunamadı: " + sceneId);
+                endGame();
+                return;
+            }
+
+            document.getElementById('error').innerText = '';
+            visitedScenes.add(sceneId);
+            console.log(`Sahne ${sceneId} ziyaret edildi. Toplam: ${visitedScenes.size}/50`);
+
+            if (visitedScenes.size >= 50 && sceneId !== 50) {
+                endGame();
+                return;
+            }
+
+            document.getElementById('scene-text').innerText = scene.text;
+            document.getElementById('result-text').innerText = lastResult;
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = '';
+
+            if (!isShowingResult) {
+                scene.choices.forEach(choice => {
+                    const button = document.createElement('button');
+                    button.innerText = choice.text;
+                    button.onclick = () => {
+                        if (choice.points) {
+                            player.love += choice.points.love || 0;
+                            player.logic += choice.points.logic || 0;
+                            player.revenge += choice.points.revenge || 0;
+                        }
+                        lastResult = choice.result || "Seçimin sonuçları ortaya çıktı.";
+                        nextSceneId = choice.nextScene;
+                        isShowingResult = true;
+                        document.getElementById('result-text').innerText = lastResult;
+                        choicesDiv.innerHTML = '';
+                        const continueButton = document.createElement('button');
+                        continueButton.innerText = 'Devam';
+                        continueButton.className = 'continue-btn';
+                        continueButton.onclick = () => {
+                            isShowingResult = false;
+                            currentSceneId = nextSceneId;
+                            console.log(`Devam butonuna tıklandı, bir sonraki sahne: ${currentSceneId}`);
+                            renderScene(currentSceneId);
+                        };
+                        choicesDiv.appendChild(continueButton);
+                        updateScore();
+                    };
+                    choicesDiv.appendChild(button);
                 });
-                confetti({
-                    particleCount: 100,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 }
-                });
-            }, 500);
+            }
+
+            updateScore();
         }
 
-        function dontBelieve() {
-            if (stage === 1) {
-                document.getElementById('question').textContent = 'Niye ben böyle bişey yapıyımki, ben sana niye kötü niyetli bişey yapayım';
-                stage = 2;
-            } else if (stage === 2) {
-                document.getElementById('question').textContent = '😢😭😢😭😢😭😢';
-                stage = 3;
-            } else if (stage === 3) {
-                document.getElementById('question').style.display = 'none';
-                document.querySelectorAll('button').forEach(btn => btn.style.display = 'none');
-                document.getElementById('sorryNote').style.display = 'block';
-            }
+        function updateScore() {
+            document.getElementById('score').innerText = `Aşk: ${player.love} | Mantık: ${player.logic} | İntikam: ${player.revenge} | Sorular: ${visitedScenes.size}/50`;
+        }
+
+        function endGame() {
+            const maxScore = Math.max(player.love, player.logic, player.revenge);
+            let endingMessage = maxScore === player.love
+                ? "Aşkla dolu bir yolculuk! Kararların kalbinin rehberliğinde geçti ve huzur buldun."
+                : maxScore === player.logic
+                ? "Mantığın zaferi! Kararların seni başarıya taşıdı, kariyerinde zirveye ulaştın."
+                : "İntikamla dolu bir yol! Kararların seni zaferlere götürdü, ama yalnızlık da getirdi.";
+
+            document.getElementById('scene-text').innerText = endingMessage;
+            document.getElementById('result-text').innerText = '';
+            document.getElementById('choices').innerHTML = '';
+            document.getElementById('score').innerText = `Final Puanları - Aşk: ${player.love} | Mantık: ${player.logic} | İntikam: ${player.revenge}`;
+            document.getElementById('error').innerText = '';
+            console.log("Oyun sona erdi.");
+        }
+
+        try {
+            console.log("Oyun başlatılıyor...");
+            renderScene(currentSceneId);
+        } catch (error) {
+            document.getElementById('error').innerText = 'Oyun başlatılırken hata oluştu. Sayfayı yenileyin.';
+            console.error("Oyun başlatma hatası: ", error);
         }
     </script>
 </body>
